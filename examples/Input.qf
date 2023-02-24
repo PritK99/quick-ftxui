@@ -1,0 +1,16 @@
+Vertical{
+    Input{
+    "string1",
+    "username",
+    "normal"
+}
+Input{
+    "s2",
+    "password",
+    "password"
+}
+Button{
+        "Exit",
+        "Exit"
+    }
+}

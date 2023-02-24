@@ -48,7 +48,7 @@ struct button {
 struct input {
     std::string placeholder;
     std::string temp;
-    std::string option;
+    std::string choice ;
 };
 
 struct slider {
@@ -79,7 +79,7 @@ inline std::ostream &operator<<(std::ostream &out, button b) {
 // print function for debugging
 inline std::ostream &operator<<(std::ostream &out, input b) {
     out << "Placeholder: " << b.placeholder << " | Temp: " << b.temp
-        << " | Options: " << b.option;
+        << " | Choice: " << b.choice;
     return out;
 }
 
@@ -102,7 +102,7 @@ BOOST_FUSION_ADAPT_STRUCT(client::quick_ftxui_ast::button,
 BOOST_FUSION_ADAPT_STRUCT(client::quick_ftxui_ast::input,
                           (std::string, placeholder)
                           (std::string, temp)
-                          (std::string, option)
+                          (std::string, choice)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(client::quick_ftxui_ast::slider,
@@ -196,6 +196,20 @@ struct node_printer : boost::static_visitor<> {
     void operator()(quick_ftxui_ast::input const &text) const {
         tab(indent + tabsize);
         std::cout << "input: " << text << std::endl;
+        if (text.choice == "normal")
+        {
+            data->components.push_back(ftxui::Input( text.placeholder, text.temp ));
+        }
+        else if(text.choice == "password")
+        {
+            ftxui::InputOption password_option ;
+            password_option.password = true;
+            data->components.push_back(ftxui::Input( text.placeholder, text.temp, password_option ));
+        }
+        else
+        {
+            throw std::runtime_error("Choice invalid");
+        }
     }
 
     void operator()(quick_ftxui_ast::nil const &text) const {
